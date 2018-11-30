@@ -1,4 +1,4 @@
-package D0019N_GitHub.ExUpg1;
+package ExUpg1;
 
 import java.util.Scanner;
 

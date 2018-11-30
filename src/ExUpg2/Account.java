@@ -1,4 +1,4 @@
-package D0019N_GitHub.ExUpg2;
+package ExUpg2;
 import java.util.Scanner;
 
 public class Account {

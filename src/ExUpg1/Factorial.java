@@ -1,6 +1,6 @@
 // @author christianmartensson
 
-package D0019N_GitHub.ExUpg1;
+package ExUpg1;
 
 //import of the scanner class, used later for input from user.
 import java.util.Scanner; 
