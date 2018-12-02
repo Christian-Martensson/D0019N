@@ -1,70 +1,119 @@
 package ExUpg2;
+
 import java.util.Scanner;
 
 /* TO DO
  * Allow personal ID with and without dash
  * Allow invalid input to be repeated right away (do while)
  * Kontrollera tillåtna siffror för månad och dag (ungefärligt)
- *
- *
+ * Create some form of log-in, using password?
+ * Create methods for handling input of first name, last name and personal id.
  * */
 
 
 public class GymWakeUp_Main {
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
-        GymWakeUp_Main_Test instance = new GymWakeUp_Main_Test();
 
-        System.out.println(instance.regID());
+        System.out.println("Choose one of the following options " +
+                "by using the numbers 1-4.");
+        System.out.println("1.  Become a member");
+        System.out.println("2.  Log in");
+        System.out.println("3.  Book a spot on an activity");
+        System.out.println("4.  Quit");
 
-        //instance.RegID();
+        int selectMenu;
+        selectMenu = input.nextInt();
+        switch (selectMenu) {
+            case 1: {
+                // Names
+                System.out.println("Enter your first name: ");
+                String fName = input.next();
 
-        //instance.CostCalculation();
-        //instance.getMenu();
-        //System.out.println("Ange ditt personnnummer: ");
-        //String persNr = input.next();
-        //instance.checkID(persNr);
+                System.out.println("Enter your last name: ");
+                String eName = input.next();
+
+
+                String persNr = regID_formCheck();
+                persNr = regID_calculationCheck(persNr);
+
+                if (persNr.equals("Error")) {
+                    System.out.println("Invalid personal ID number.");
+                    break;
+                }
+                else {
+                    int numberOfMonths = costCalculation();
+
+                    Account account1 = new Account(fName, eName, persNr, numberOfMonths);
+
+
+                    System.out.println("Your account has been registered.");
+                }
+
+
+                break;
+            }
+            case 2: {
+
+                break;
+            }
+            case 3: {
+
+                break;
+            }
+            case 4: {
+                break;
+            }
+        }
+
 
 
 
     }
 
-    public static String regID() {
-        int sumLoop = 0;
+
+    public static String regID_formCheck() {
+        boolean check = true;
         String persNr = "";
         String persNrTemp;
         Scanner input = new Scanner(System.in);
-        boolean check = true;
 
+        // Input for personal ID number. Specifically on this form to avoid problems with people of 100 or older age.
+        System.out.println("Enter your personal ID number on the form yyyymmdd-xxxx:");
         do {
-            // Input for personal ID number
-            System.out.println("Enter your personal ID number:");
             // Assigns input to variable persNrTemp
             persNrTemp = input.next();
             // Converts the string to a charArray
             char[] xytemp = persNrTemp.toCharArray();
 
-            // IF written on dash-form, convert to non-dash form.
-            if (xytemp.length == 11 && (xytemp[6] == '-' || xytemp[6] == '+')) {
+            // If the input meets the following requirements for form, the dash will be removed.
+            if (xytemp.length == 13&& xytemp[8] == '-') {
                 persNr = persNrTemp.replace("-", "");
-                char[] xy = persNr.toCharArray();
                 check = false;
-            } else if (xytemp.length == 10) {
-                persNr = persNrTemp;
-                char[] xy = persNr.toCharArray();
-                check = false;
-            } else {
-                System.out.println("You need to enter the personal ID number on the form: yymmdd-xxxx");
+            }
+            else if(persNrTemp.equals("q")) {
+                break;
+            }
+            else {
+                System.out.println("Please enter your personal ID in the following form: yyyymmdd-xxxx");
             }
         } while (check);
 
-        char[] xy = persNr.toCharArray();
+        return persNr;
+    }
 
+
+
+    public static String regID_calculationCheck(String persNr) {
+        int sumLoop = 0;
+        char[] xy = persNr.toCharArray();
+        int sistaSiffran = xy[11] - '0';
+        int allt;
 
 
         // Multiply every other number by 2 (starting with the very first number) and add each to a sum variable.
         // If the product consists of two numbers, add them together.
-        for (int x = 0; x < 10; x = x + 2) {
+        for (int x = 2; x < 12; x = x + 2) {
             int number = xy[x] - '0';
             if (number * 2 >= 10) {
                 int product = number * 2;
@@ -81,71 +130,90 @@ public class GymWakeUp_Main {
         }
 
         // Add every other number to a sum variable (starting with the second number)
-        for (int x = 1; x < 9; x = x + 2) {
+        for (int x = 3; x < 11; x = x + 2) {
             int number = xy[x] - '0';
             sumLoop = sumLoop + number;
         }
 
-        int sistaSiffran = xy[9] - '0';
-        int allt = sumLoop + sistaSiffran;
-        System.out.println("Summan: " + sumLoop);
-        System.out.println("Summan, inklusive kontrollsiffran: " + allt);
+        allt = sumLoop + sistaSiffran;
+
+        //Temporär kontroll
+        //System.out.println("Summan: " + sumLoop);
+        //System.out.println("Summan, inklusive kontrollsiffran: " + allt);
 
         if (allt % 10 == 0)
             return persNr;
         else {
-            System.out.println("Error");
             return "Error";
         }
     }
 
-    public void checkID(String persNr) {
-        System.out.println(persNr);
-    }
+
+
 
     // public boolean validChoice (int firstIndex, int secondIndex)
 
-    private void CostCalculation() {
+    private static int costCalculation() {
         Scanner input = new Scanner(System.in);
 
-        System.out.println("For how many months do you want to sign?");
 
-
-        int m = input.nextInt();
         int monthlyPrice = 0;
         int totalPrice;
         int membership = 100;
+        int numberOfMonths;
+        String answer;
 
-        if (m <= 0) {
-            System.out.println("Error, number must be bigger than 0.");
-        }
-        else if (m >= 1 && m <= 2) {
-            monthlyPrice = 400;
-        }
-        else {
-            if (m <= 6) {
-                monthlyPrice = 350;
+
+        do {
+            System.out.println("For how many months do you want to sign a membership?");
+            numberOfMonths = input.nextInt();
+
+            if (numberOfMonths <= 0) {
+                System.out.println("Error, number must be bigger than 0.");
+            } else if (numberOfMonths >= 1 && numberOfMonths <= 2) {
+                monthlyPrice = 400;
+            } else {
+                if (numberOfMonths <= 6) {
+                    monthlyPrice = 350;
+                } else {
+                    if (numberOfMonths < 12) {
+                        monthlyPrice = 300;
+                    } else {
+                        monthlyPrice = 250;
+                    }
+
+                }
             }
 
-            else {
-                if (m < 12) {
-                    monthlyPrice = 300;
-                }
-                else {
-                    monthlyPrice = 250;
-                }
+            totalPrice = membership + monthlyPrice * numberOfMonths;
 
-            }
-        }
+            System.out.printf("\nThe membership fee is %d SEK. " +
+                            "\nYour monthly fee is %d SEK." +
+                            "\nOver a period of %d months you will pay %d SEK in total.\n",
+                    membership, monthlyPrice, numberOfMonths, totalPrice);
+            System.out.println("Do you confirm this selection? (y/n)");
+            answer = input.next();
+        } while(!(answer.equals("y")));
+        // ask if confirmed, otherwise return.
 
-        totalPrice = monthlyPrice * m;
-
-        System.out.printf("\nThe membership fee is %d. " +
-                        "\nYour monthly fee is %d crowns." +
-                        "\nOver a period of %d months you will pay %d crowns in total.",
-                membership, monthlyPrice, m, totalPrice);
+        return numberOfMonths;
     }
 
+
+
+    private void bookaclass (String placement){
+          /*
+        String[][] room = new String[3][3];
+        for (int i=0, i<3, i++) {
+            for (int j=0, j<3, j++) {
+                room[i][j] = " ";
+            }
+
+        }
+        */
+    }
+
+    /*
     public static void getMenu() {
         Scanner input = new Scanner(System.in);
 
@@ -165,27 +233,14 @@ public class GymWakeUp_Main {
                 System.out.println("Enter your last name: ");
                 String eName = input.next();
                 Account.setName(fName, eName);
-                String regID = regID();
-                System.out.println(regID);
-
+                //IF true, set the personal ID number.
+                String persNr = regID_formCheck();
+                regID_calculationCheck(persNr);
 
             }
         }
-    }
-    private void becomeMember() {
+    } */
 
-    }
-    private void bookaclass (String placement){
-          /*
-        String[][] room = new String[3][3];
-        for (int i=0, i<3, i++) {
-            for (int j=0, j<3, j++) {
-                room[i][j] = " ";
-            }
-
-        }
-        */
-    }
 }
 
 
