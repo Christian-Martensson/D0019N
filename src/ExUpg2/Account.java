@@ -4,46 +4,23 @@ import java.util.Scanner;
 public class Account {
 
     private String fName;
+    // Ta bort lName från programmet
     private String lName;
     private String persNr;
     private int numberOfMonths;
 
-    /*public Account() { //String fName, String lName, String persNr, int numberOfMonths) {
+    /*
+    public Account() { //String fName, String lName, String persNr, int numberOfMonths) {
         this.fName = fName;
         this.lName = lName;
         this.persNr = persNr;
         this.numberOfMonths = numberOfMonths;
-    }          */
-
-
-    public String logIn(String truePersNr, String inputPersNr) {
-        System.out.println();
-
-        inputPersNr = Account.regID_formCheck(inputPersNr);
-        if (truePersNr.equals(inputPersNr)) {
-            System.out.println("You are logged in!");
-            return(truePersNr);
-        }
-        else {
-            System.out.println("Can't be found in the system.");
-            return("Error");
-        }
-        //String persNrCheck = account1.getPersNr;
-        // Hur kommer jag åt objektet????
-
     }
+    */
 
-    /*public void logIn() {
 
-        Scanner input = new Scanner(System.in);
-        System.out.println("Enter your personal ID number on the form yyyymmdd-xxxx: ");
-        String persNr = input.next();
-        persNr = Account.regID_formCheck(persNr);
-        //System.out.println(GymWakeUp_Main.account1.getPersNr());
-        //String persNrCheck = account1.getPersNr;
-        // Hur kommer jag åt objektet????
 
-    }*/
+
 
     public void setName(String fName, String lName) {
 
@@ -90,8 +67,6 @@ public class Account {
         return persNr;
     }
 
-
-
     public static String regID_calculationCheck(String persNr) {
         int sumLoop = 0;
         char[] xy = persNr.toCharArray();
@@ -132,5 +107,71 @@ public class Account {
         }
     }
 
+    public int costCalculation() {
+        Scanner input = new Scanner(System.in);
+
+
+        int monthlyPrice = 0;
+        int totalPrice;
+        int membership = 100;
+        int numberOfMonths;
+        String answer;
+        boolean continueLoop = false;
+
+
+        do {
+            do {
+                System.out.println("For how many months do you want to sign a membership?");
+                numberOfMonths = input.nextInt();
+
+                if (numberOfMonths < 1) {
+                    System.out.println("Error, length must be at least 1 month.");
+                    continueLoop = true;
+                } else if (numberOfMonths >= 1 && numberOfMonths <= 2) {
+                    monthlyPrice = 400;
+                    continueLoop = false;
+                } else {
+                    continueLoop = false;
+                    if (numberOfMonths <= 6) {
+                        monthlyPrice = 350;
+                    } else {
+                        if (numberOfMonths < 12) {
+                            monthlyPrice = 300;
+                        } else {
+                            monthlyPrice = 250;
+                        }
+
+                    }
+                }
+            } while(continueLoop == true);
+            totalPrice = membership + monthlyPrice * numberOfMonths;
+
+            System.out.printf("\nThe membership fee is %d SEK. " +
+                            "\nYour monthly fee is %d SEK." +
+                            "\nOver a period of %d months you will pay %d SEK in total.\n",
+                    membership, monthlyPrice, numberOfMonths, totalPrice);
+            System.out.println("Do you confirm this selection? (y/n)");
+            answer = input.next();
+        } while(!(answer.equals("y")));
+        // ask if confirmed, otherwise return.
+
+        return numberOfMonths;
+    }
+
+    public String logIn(String truePersNr, String inputPersNr) {
+        System.out.println();
+
+        inputPersNr = Account.regID_formCheck(inputPersNr);
+        if (truePersNr.equals(inputPersNr)) {
+            System.out.println("You are logged in!");
+            return(truePersNr);
+        }
+        else {
+            System.out.println("Can't be found in the system.");
+            return("Error");
+        }
+    }
 }
+
+
 

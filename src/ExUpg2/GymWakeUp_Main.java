@@ -69,7 +69,7 @@ public class GymWakeUp_Main {
                     } while (persNr.equals("Error"));
 
 
-                    int numberOfMonths = costCalculation();
+                    int numberOfMonths = account1.costCalculation();
 
                     account1.setPersNr(persNr);
                     account1.setName(fName, lName);
@@ -146,56 +146,7 @@ public class GymWakeUp_Main {
 
     // public boolean validChoice (int firstIndex, int secondIndex)
 
-    private static int costCalculation() {
-        Scanner input = new Scanner(System.in);
 
-
-        int monthlyPrice = 0;
-        int totalPrice;
-        int membership = 100;
-        int numberOfMonths;
-        String answer;
-        boolean continueLoop = false;
-
-
-        do {
-            do {
-                System.out.println("For how many months do you want to sign a membership?");
-                numberOfMonths = input.nextInt();
-
-                if (numberOfMonths < 1) {
-                    System.out.println("Error, length must be at least 1 month.");
-                    continueLoop = true;
-                } else if (numberOfMonths >= 1 && numberOfMonths <= 2) {
-                    monthlyPrice = 400;
-                    continueLoop = false;
-                } else {
-                    continueLoop = false;
-                    if (numberOfMonths <= 6) {
-                        monthlyPrice = 350;
-                    } else {
-                        if (numberOfMonths < 12) {
-                            monthlyPrice = 300;
-                        } else {
-                            monthlyPrice = 250;
-                        }
-
-                    }
-                }
-            } while(continueLoop == true);
-            totalPrice = membership + monthlyPrice * numberOfMonths;
-
-            System.out.printf("\nThe membership fee is %d SEK. " +
-                            "\nYour monthly fee is %d SEK." +
-                            "\nOver a period of %d months you will pay %d SEK in total.\n",
-                    membership, monthlyPrice, numberOfMonths, totalPrice);
-            System.out.println("Do you confirm this selection? (y/n)");
-            answer = input.next();
-        } while(!(answer.equals("y")));
-        // ask if confirmed, otherwise return.
-
-        return numberOfMonths;
-    }
 
 
 
