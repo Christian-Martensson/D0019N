@@ -95,10 +95,24 @@ public class GymWakeUp_Main {
 
                 }
                 case 3: {
+                    if (account1.getPersNr() == null) {
+                        System.out.println("You must become a member before logging in!");
+                        break;
+                    }
+                    else {
+                        System.out.println("Choose from the following classes using numbers 1-3: \n1. Spinning \n2. Aerobics \n3. Yoga. ");
+                        byte classChoice = input.nextByte();
+                        //add method that selects the correct object for chosen activity.
 
-                    break;
+                        System.out.println("Choose one of the spots (a1, a2 ... c2, c3): ");
+                        String spotChoice = input.next();
+                        //add method that reserves spot for chosen activity (through an array)
+
+                        break;
+                    }
                 }
                 case 4: {
+                    System.exit(0);
                     break;
                 }
             }
@@ -109,9 +123,9 @@ public class GymWakeUp_Main {
 
     public static void bookSpot() {
         Scanner input = new Scanner(System.in);
-        System.out.println("Choose from the following classes using numbers 1-3: \n1. Spinning \n2. Aerobics \n3. Yoga. ");
+
         int menuChoice = input.nextByte();
-        System.out.println("Choose one of the spots (a1, a2 ... c2, c3): ");
+
 
         /*
         1. Menu is presented to the user.
