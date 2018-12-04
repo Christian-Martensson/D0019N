@@ -28,31 +28,27 @@ public class Account {
         this.lName = lName;
     }
 
+
     public String getfName() {
         return fName;
+    }
+    public String getlName() {
+        return lName;
     }
 
     public String getPersNr() {
         return persNr;
     }
 
+    //Sets personal ID number
     public void setPersNr(String persNr) {
         this.persNr = persNr;
     }
 
-    public void createAccount() {
-        Scanner input = new Scanner(System.in);
-        System.out.println("Enter your first name: ");
-
-    }
-
+    //Checks the form on the personal ID number (it needs to be 13 characters long and the 9th character must be "-").
     public static String regID_formCheck(String persNrTemp) {
-        boolean check = true;
-        String persNr = "";
-
-        // Input for personal ID number. Specifically on this form to avoid problems with people of 100 or older age.
-
-            // Converts the string to a charArray
+        String persNr;
+        // Converts the string to a charArray (to remove specific digits)
         char[] xytemp = persNrTemp.toCharArray();
 
         // If the input meets the following requirements for form, the dash will be removed.
@@ -67,6 +63,7 @@ public class Account {
         return persNr;
     }
 
+    //Checks the code according to the Luhn-algorithm.
     public static String regID_calculationCheck(String persNr) {
         int sumLoop = 0;
         char[] xy = persNr.toCharArray();
@@ -107,6 +104,7 @@ public class Account {
         }
     }
 
+    //Calculates the cost of membership, depending on months input.
     public int costCalculation() {
         Scanner input = new Scanner(System.in);
 
@@ -116,7 +114,7 @@ public class Account {
         int membership = 100;
         int numberOfMonths;
         String answer;
-        boolean continueLoop = false;
+        boolean continueLoop;
 
 
         do {
@@ -170,6 +168,12 @@ public class Account {
             System.out.println("Can't be found in the system.");
             return("Error");
         }
+    }
+
+    public void createAccount() {
+        Scanner input = new Scanner(System.in);
+        System.out.println("Enter your first name: ");
+
     }
 }
 

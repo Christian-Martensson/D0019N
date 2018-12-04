@@ -8,6 +8,7 @@ import java.util.Scanner;
  * Kontrollera tillåtna siffror för månad och dag (ungefärligt)
  * Create some form of log-in, using password?
  * Create methods for handling input of first name, last name and personal id.
+ * Prints the name and personal ID of the person logged in.
  * */
 
 
@@ -24,8 +25,6 @@ public class GymWakeUp_Main {
     public static void main(String[] args) {
 
         getMenu();
-
-
     }
 
     public static void getMenu() {
@@ -90,6 +89,7 @@ public class GymWakeUp_Main {
                         String inputPersNr = input.next();
                         String truePersNr = account1.getPersNr();
                         account1.logIn(truePersNr, inputPersNr);
+                        System.out.println("You are now logged in %d");
                         break;
                     }
 
@@ -100,7 +100,7 @@ public class GymWakeUp_Main {
                         break;
                     }
                     else {
-                        System.out.println("Choose from the following classes using numbers 1-3: \n1. Spinning \n2. Aerobics \n3. Yoga. ");
+                        System.out.println("Choose from the following classes using numbers 1-3: \n1. Spinning \n2. Aerobics \n3. Yoga ");
                         byte classChoice = input.nextByte();
                         //add method that selects the correct object for chosen activity.
 
@@ -125,7 +125,9 @@ public class GymWakeUp_Main {
         Scanner input = new Scanner(System.in);
 
         int menuChoice = input.nextByte();
+        int n = 5;
 
+        //ArrayList<Integer> arrli = new ArrayList<Integer>(n);
 
         /*
         1. Menu is presented to the user.
@@ -150,7 +152,7 @@ public class GymWakeUp_Main {
 
 
 
-    private void bookClass (String placement){
+    private void bookActivity (String placement) {
           /*
         String[][] room = new String[3][3];
         for (int i=0, i<3, i++) {
