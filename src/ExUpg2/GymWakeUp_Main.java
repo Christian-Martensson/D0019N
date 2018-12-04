@@ -11,142 +11,121 @@ import java.util.Scanner;
  * */
 
 
+/* Notes
+* Inga static - använd objekt istället.
+*
+*
+*
+* */
+
+
 public class GymWakeUp_Main {
+
     public static void main(String[] args) {
+
+        getMenu();
+
+
+    }
+
+    public static void getMenu() {
         Scanner input = new Scanner(System.in);
+        Account account1 = new Account();
+        boolean continueLoop = true;
+        do {
+            System.out.println("Choose one of the following options " +
+                    "by using the numbers 1-4.");
+            System.out.println("1.  Become a member");
+            System.out.println("2.  Log in");
+            System.out.println("3.  Book a spot on an activity");
+            System.out.println("4.  Quit");
 
-        System.out.println("Choose one of the following options " +
-                "by using the numbers 1-4.");
-        System.out.println("1.  Become a member");
-        System.out.println("2.  Log in");
-        System.out.println("3.  Book a spot on an activity");
-        System.out.println("4.  Quit");
-
-        int selectMenu;
-        selectMenu = input.nextInt();
-        switch (selectMenu) {
-            case 1: {
-                // Names
-                System.out.println("Enter your first name: ");
-                String fName = input.next();
-
-                System.out.println("Enter your last name: ");
-                String eName = input.next();
+            int selectMenu;
+            selectMenu = input.nextInt();
+            switch (selectMenu) {
+                case 1: {
+                    // Names
+                    String persNr;
+                    System.out.println("Enter your first name: ");
+                    String fName = input.next();
 
 
-                String persNr = regID_formCheck();
-                persNr = regID_calculationCheck(persNr);
+                    System.out.println("Enter your last name: ");
+                    String lName = input.next();
+                    account1.setName(fName, lName);
 
-                if (persNr.equals("Error")) {
-                    System.out.println("Invalid personal ID number.");
-                    break;
-                }
-                else {
+                    do {
+                        do {
+                            System.out.println("Enter your personal ID number on the form yyyymmdd-xxxx:");
+                            persNr = input.next();
+                            persNr = Account.regID_formCheck(persNr);
+
+                        } while (persNr.equals("Error"));
+
+                        persNr = Account.regID_calculationCheck(persNr);
+                        if (persNr.equals("Error"))
+                            System.out.println("Invalid personal ID number.");
+
+                    } while (persNr.equals("Error"));
+
+
                     int numberOfMonths = costCalculation();
 
-                    Account account1 = new Account(fName, eName, persNr, numberOfMonths);
+                    account1.setPersNr(persNr);
+                    account1.setName(fName, lName);
 
 
-                    System.out.println("Your account has been registered.");
+                    //Account account1 = new Account(fName, lName, persNr, numberOfMonths);
+
+                    System.out.println("Your account has been registered.\n");
+                    break;
+                                    }
+                case 2: {
+                    if (account1.getPersNr() == null) {
+                        System.out.println("You must become a member before logging in!");
+                        break;
+                    }
+                    else {
+                        System.out.println("To log in, enter your personal ID number on the form yyyymmdd-xxxx: ");
+                        String inputPersNr = input.next();
+                        String truePersNr = account1.getPersNr();
+                        account1.logIn(truePersNr, inputPersNr);
+                        break;
+                    }
+
                 }
+                case 3: {
 
-
-                break;
+                    break;
+                }
+                case 4: {
+                    break;
+                }
             }
-            case 2: {
-
-                break;
-            }
-            case 3: {
-
-                break;
-            }
-            case 4: {
-                break;
-            }
-        }
-
-
-
-
+        } while(continueLoop);
     }
 
 
-    public static String regID_formCheck() {
-        boolean check = true;
-        String persNr = "";
-        String persNrTemp;
+
+    public static void bookSpot() {
         Scanner input = new Scanner(System.in);
+        System.out.println("Choose from the following classes using numbers 1-3: \n1. Spinning \n2. Aerobics \n3. Yoga. ");
+        int menuChoice = input.nextByte();
+        System.out.println("Choose one of the spots (a1, a2 ... c2, c3): ");
 
-        // Input for personal ID number. Specifically on this form to avoid problems with people of 100 or older age.
-        System.out.println("Enter your personal ID number on the form yyyymmdd-xxxx:");
-        do {
-            // Assigns input to variable persNrTemp
-            persNrTemp = input.next();
-            // Converts the string to a charArray
-            char[] xytemp = persNrTemp.toCharArray();
-
-            // If the input meets the following requirements for form, the dash will be removed.
-            if (xytemp.length == 13&& xytemp[8] == '-') {
-                persNr = persNrTemp.replace("-", "");
-                check = false;
-            }
-            else if(persNrTemp.equals("q")) {
-                break;
-            }
-            else {
-                System.out.println("Please enter your personal ID in the following form: yyyymmdd-xxxx");
-            }
-        } while (check);
-
-        return persNr;
+        /*
+        1. Menu is presented to the user.
+        2. The user selects "book a class"
+        3. The system prints the classes to choose from (1-3)
+            - Other input is not allowed, reprompt
+        4. The user selects a class.
+        5. The system prints the spots to choose from.
+            - Other input is not allowed, reprompt
+        6. The user selects the spot.
+            - if taken, user is prompted to choose another spot.
+        */
     }
 
-
-
-    public static String regID_calculationCheck(String persNr) {
-        int sumLoop = 0;
-        char[] xy = persNr.toCharArray();
-        int sistaSiffran = xy[11] - '0';
-        int allt;
-
-
-        // Multiply every other number by 2 (starting with the very first number) and add each to a sum variable.
-        // If the product consists of two numbers, add them together.
-        for (int x = 2; x < 12; x = x + 2) {
-            int number = xy[x] - '0';
-            if (number * 2 >= 10) {
-                int product = number * 2;
-                String productAsString = Integer.toString(product);
-                char[] mini = productAsString.toCharArray();
-                int firstNumber = mini[0] - '0';
-                int secondNumber = mini[1] - '0';
-                int summan = firstNumber + secondNumber;
-                sumLoop = sumLoop + summan;
-            }
-            else {
-                sumLoop = sumLoop + number * 2;
-            }
-        }
-
-        // Add every other number to a sum variable (starting with the second number)
-        for (int x = 3; x < 11; x = x + 2) {
-            int number = xy[x] - '0';
-            sumLoop = sumLoop + number;
-        }
-
-        allt = sumLoop + sistaSiffran;
-
-        //Temporär kontroll
-        //System.out.println("Summan: " + sumLoop);
-        //System.out.println("Summan, inklusive kontrollsiffran: " + allt);
-
-        if (allt % 10 == 0)
-            return persNr;
-        else {
-            return "Error";
-        }
-    }
 
 
 
@@ -162,29 +141,34 @@ public class GymWakeUp_Main {
         int membership = 100;
         int numberOfMonths;
         String answer;
+        boolean continueLoop = false;
 
 
         do {
-            System.out.println("For how many months do you want to sign a membership?");
-            numberOfMonths = input.nextInt();
+            do {
+                System.out.println("For how many months do you want to sign a membership?");
+                numberOfMonths = input.nextInt();
 
-            if (numberOfMonths <= 0) {
-                System.out.println("Error, number must be bigger than 0.");
-            } else if (numberOfMonths >= 1 && numberOfMonths <= 2) {
-                monthlyPrice = 400;
-            } else {
-                if (numberOfMonths <= 6) {
-                    monthlyPrice = 350;
+                if (numberOfMonths < 1) {
+                    System.out.println("Error, length must be at least 1 month.");
+                    continueLoop = true;
+                } else if (numberOfMonths >= 1 && numberOfMonths <= 2) {
+                    monthlyPrice = 400;
+                    continueLoop = false;
                 } else {
-                    if (numberOfMonths < 12) {
-                        monthlyPrice = 300;
+                    continueLoop = false;
+                    if (numberOfMonths <= 6) {
+                        monthlyPrice = 350;
                     } else {
-                        monthlyPrice = 250;
+                        if (numberOfMonths < 12) {
+                            monthlyPrice = 300;
+                        } else {
+                            monthlyPrice = 250;
+                        }
+
                     }
-
                 }
-            }
-
+            } while(continueLoop == true);
             totalPrice = membership + monthlyPrice * numberOfMonths;
 
             System.out.printf("\nThe membership fee is %d SEK. " +
@@ -201,7 +185,7 @@ public class GymWakeUp_Main {
 
 
 
-    private void bookaclass (String placement){
+    private void bookClass (String placement){
           /*
         String[][] room = new String[3][3];
         for (int i=0, i<3, i++) {
@@ -212,34 +196,6 @@ public class GymWakeUp_Main {
         }
         */
     }
-
-    /*
-    public static void getMenu() {
-        Scanner input = new Scanner(System.in);
-
-        System.out.println("Choose one of the following options " +
-                "by using the numbers 1-4.");
-        System.out.println("1.  Become a member");
-        System.out.println("2.  Log in");
-        System.out.println("3.  Book a spot on an activity");
-        System.out.println("4.  Quit");
-
-        int selectMenu;
-        selectMenu = input.nextInt();
-        switch(selectMenu) {
-            case 1:{
-                System.out.println("Enter your first name: ");
-                String fName = input.next();
-                System.out.println("Enter your last name: ");
-                String eName = input.next();
-                Account.setName(fName, eName);
-                //IF true, set the personal ID number.
-                String persNr = regID_formCheck();
-                regID_calculationCheck(persNr);
-
-            }
-        }
-    } */
 
 }
 
