@@ -1,6 +1,8 @@
 package ExUpg2;
 
 import java.util.Scanner;
+import java.util.Arrays;
+
 
 /* TO DO
  * Allow personal ID with and without dash
@@ -99,13 +101,16 @@ public class GymWakeUp_Main {
                         System.out.println("You must become a member before logging in!");
                         break;
                     }
+
                     else {
                         System.out.println("Choose from the following classes using numbers 1-3: \n1. Spinning \n2. Aerobics \n3. Yoga ");
                         byte classChoice = input.nextByte();
                         //add method that selects the correct object for chosen activity.
 
-                        System.out.println("Choose one of the spots (a1, a2 ... c2, c3): ");
-                        String spotChoice = input.next();
+                        bookSpot();
+
+                        //System.out.println("Choose one of the spots (a1, a2 ... c2, c3): ");
+                        //String spotChoice = input.next();
                         //add method that reserves spot for chosen activity (through an array)
 
                         break;
@@ -122,10 +127,44 @@ public class GymWakeUp_Main {
 
 
     public static void bookSpot() {
-        Scanner input = new Scanner(System.in);
 
-        int menuChoice = input.nextByte();
-        int n = 5;
+
+        String[] platser = {"1a" ,"1b", "1c", "2a", "2b", "2c", "3a", "3b", "3c"};
+        String[] upptagnaPlatser = {"1a", "3c"};
+
+        System.out.println("Skriv in platsen du vill boka");
+        Scanner input = new Scanner(System.in);
+        String valdPlats = input.next();
+
+
+        if(Arrays.asList(upptagnaPlatser).contains(valdPlats)){
+
+            System.out.println("Sorry platsen ar upptagen, forsok igen");
+
+        }
+
+
+        else if(Arrays.asList(platser).contains(valdPlats)) {
+
+            System.out.println("Grattis du ar bokad!");
+
+        }
+
+        else {
+
+            System.out.println("Du har valt en ogiltig plats forsok igen");
+
+        }
+
+
+
+    }
+
+}
+
+
+
+
 
         //ArrayList<Integer> arrli = new ArrayList<Integer>(n);
 
@@ -140,8 +179,6 @@ public class GymWakeUp_Main {
         6. The user selects the spot.
             - if taken, user is prompted to choose another spot.
         */
-    }
-
 
 
 
@@ -150,21 +187,6 @@ public class GymWakeUp_Main {
 
 
 
-
-
-    private void bookActivity (String placement) {
-          /*
-        String[][] room = new String[3][3];
-        for (int i=0, i<3, i++) {
-            for (int j=0, j<3, j++) {
-                room[i][j] = " ";
-            }
-
-        }
-        */
-    }
-
-}
 
 
 
