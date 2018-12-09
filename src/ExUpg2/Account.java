@@ -1,7 +1,10 @@
 package ExUpg2;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Account {
+
 
     private String fName;
     // Ta bort lName från programmet
@@ -175,6 +178,8 @@ public class Account {
         System.out.println("Enter your first name: ");
 
     }
+
+
 }
 
 

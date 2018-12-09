@@ -1,6 +1,11 @@
 package ExUpg2;
 
+import java.lang.reflect.Array;
 import java.util.Scanner;
+import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
+
 
 /* TO DO
  * Allow personal ID with and without dash
@@ -22,6 +27,17 @@ import java.util.Scanner;
 
 public class GymWakeUp_Main {
 
+    public static ArrayList<String> upptagnaSpinning = new ArrayList<String>();
+    public static ArrayList<String> upptagnaAerobics = new ArrayList<String>();
+    public static ArrayList<String> upptagnaYoga = new ArrayList<String>();
+
+
+    public static ArrayList kurs = null;
+
+    public static byte classChoice;
+
+
+
     public static void main(String[] args) {
 
         getMenu();
@@ -32,7 +48,7 @@ public class GymWakeUp_Main {
         Account account1 = new Account();
         boolean continueLoop = true;
         do {
-            System.out.println("Choose one of the following options " +
+            System.out.println("\nChoose one of the following options " +
                     "by using the numbers 1-4.");
             System.out.println("1.  Become a member");
             System.out.println("2.  Log in");
@@ -78,7 +94,8 @@ public class GymWakeUp_Main {
 
                     System.out.println("Your account has been registered.\n");
                     break;
-                                    }
+                }
+
                 case 2: {
                     if (account1.getPersNr() == null) {
                         System.out.println("You must become a member before logging in!");
@@ -89,23 +106,33 @@ public class GymWakeUp_Main {
                         String inputPersNr = input.next();
                         String truePersNr = account1.getPersNr();
                         account1.logIn(truePersNr, inputPersNr);
-                        System.out.println("You are now logged in %d");
                         break;
                     }
 
                 }
                 case 3: {
-                    if (account1.getPersNr() == null) {
+                    if (account1.getPersNr() == null) { //!!!!! UPDATE
                         System.out.println("You must become a member before logging in!");
                         break;
                     }
+
                     else {
                         System.out.println("Choose from the following classes using numbers 1-3: \n1. Spinning \n2. Aerobics \n3. Yoga ");
-                        byte classChoice = input.nextByte();
+                        classChoice = input.nextByte();
+                        if (!((classChoice >= 1) && classChoice <= 3)) {
+                            System.out.println("Invalid choice");
+                            break;
+                        }
+                        else {
+                            bookSpot(classChoice);
+                        }
+
                         //add method that selects the correct object for chosen activity.
 
-                        System.out.println("Choose one of the spots (a1, a2 ... c2, c3): ");
-                        String spotChoice = input.next();
+
+
+                        //System.out.println("Choose one of the spots (a1, a2 ... c2, c3): ");
+                        //String spotChoice = input.next();
                         //add method that reserves spot for chosen activity (through an array)
 
                         break;
@@ -121,11 +148,75 @@ public class GymWakeUp_Main {
 
 
 
-    public static void bookSpot() {
-        Scanner input = new Scanner(System.in);
+    public static void bookSpot(byte classChoice) {
 
-        int menuChoice = input.nextByte();
-        int n = 5;
+
+        switch (classChoice) {
+            case 1:  kurs = upptagnaSpinning;
+                break;
+            case 2:  kurs = upptagnaAerobics;
+                break;
+            case 3:  kurs = upptagnaYoga;
+                break;
+        }
+
+        String[] platser = {"1a" ,"1b", "1c", "2a", "2b", "2c", "3a", "3b", "3c"};
+
+        printRoom();
+        System.out.println("Ange vilken plats du vill boka (1a, 2a... 3c)");
+        Scanner input = new Scanner(System.in);
+        String valdPlats = input.next();
+
+
+        if(kurs.contains(valdPlats)){
+
+            System.out.println("Platsen är upptagen, försök igen.");
+
+        }
+
+
+        else if(Arrays.asList(platser).contains(valdPlats)) {
+            if (classChoice == 1) {
+                upptagnaSpinning.add(valdPlats);
+            }
+            else if (classChoice == 2) {
+                upptagnaAerobics.add(valdPlats);
+            }
+            else if (classChoice == 3) {
+                upptagnaYoga.add(valdPlats);
+            }
+            System.out.println("Grattis du är bokad!");
+            System.out.println(upptagnaSpinning);
+
+        }
+
+        else {
+
+            System.out.println("Du har valt en ogiltigt plats, var vänlig och försök igen.");
+
+        }
+
+
+
+    }
+
+    public static void printRoom() {
+
+        System.out.println("---------------");
+        System.out.printf ("| 1a | 1b | 1c |\n");
+        System.out.println("---------------");
+        System.out.printf ("| 2a | 2b | 2c |\n");
+        System.out.println("---------------");
+        System.out.printf ("| 3a | 3b | 3c |\n");
+        System.out.println("---------------");
+
+    }
+
+}
+
+
+
+
 
         //ArrayList<Integer> arrli = new ArrayList<Integer>(n);
 
@@ -140,8 +231,6 @@ public class GymWakeUp_Main {
         6. The user selects the spot.
             - if taken, user is prompted to choose another spot.
         */
-    }
-
 
 
 
@@ -150,21 +239,6 @@ public class GymWakeUp_Main {
 
 
 
-
-
-    private void bookActivity (String placement) {
-          /*
-        String[][] room = new String[3][3];
-        for (int i=0, i<3, i++) {
-            for (int j=0, j<3, j++) {
-                room[i][j] = " ";
-            }
-
-        }
-        */
-    }
-
-}
 
 
 
