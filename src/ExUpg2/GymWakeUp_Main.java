@@ -1,205 +1,164 @@
 package ExUpg2;
 
-import java.lang.reflect.Array;
 import java.util.Scanner;
 import java.util.Arrays;
 import java.util.ArrayList;
-import java.util.List;
-
-
-/* TO DO
- * Allow personal ID with and without dash
- * Allow invalid input to be repeated right away (do while)
- * Kontrollera tillåtna siffror för månad och dag (ungefärligt)
- * Create some form of log-in, using password?
- * Create methods for handling input of first name, last name and personal id.
- * Prints the name and personal ID of the person logged in.
- * */
-
-
-/* Notes
-* Inga static - använd objekt istället.
-*
-*
-*
-* */
 
 
 public class GymWakeUp_Main {
+    // global Arraylist containing personal ID numbers.
+    public static ArrayList<String> accounts = new ArrayList<String>();
 
-    public static ArrayList<String> upptagnaSpinning = new ArrayList<String>();
-    public static ArrayList<String> upptagnaAerobics = new ArrayList<String>();
-    public static ArrayList<String> upptagnaYoga = new ArrayList<String>();
+    // global ArrayLists for the bookClass method (keeps track of which spots are occupied).
+    public static ArrayList<String> occupiedSpinning = new ArrayList<String>();
+    public static ArrayList<String> occupiedAerobics = new ArrayList<String>();
+    public static ArrayList<String> occupiedYoga = new ArrayList<String>();
 
-
+    // Further ArrayList used in the bookClass method. Used to reduce redundancy of code.
     public static ArrayList kurs = null;
 
+    // variable used in the bookClass method to choose
     public static byte classChoice;
 
 
-
+    // ------------------------------------------------------------------------------------------------
+    // Program starts here
+    // ------------------------------------------------------------------------------------------------
     public static void main(String[] args) {
 
         getMenu();
-    }
+
+    } // End of main
+
 
     public static void getMenu() {
         Scanner input = new Scanner(System.in);
-        Account account1 = new Account();
         boolean continueLoop = true;
+        boolean loggedIn = false;
+
         do {
             System.out.println("\nChoose one of the following options " +
                     "by using the numbers 1-4.");
             System.out.println("1.  Become a member");
             System.out.println("2.  Log in");
-            System.out.println("3.  Book a spot on an activity");
+            System.out.println("3.  Book activity");
             System.out.println("4.  Quit");
 
-            int selectMenu;
-            selectMenu = input.nextInt();
+            int selectMenu = input.nextInt();
+
             switch (selectMenu) {
-                case 1: {
-                    // Names
-                    String persNr;
-                    System.out.println("Enter your first name: ");
-                    String fName = input.next();
+                case 1: { // Become a member
 
+                    // Calls the method that collect first name, last name, personal ID number and membership status.
+                    new Account().createAccount();
 
-                    System.out.println("Enter your last name: ");
-                    String lName = input.next();
-                    account1.setName(fName, lName);
-
-                    do {
-                        do {
-                            System.out.println("Enter your personal ID number on the form yyyymmdd-xxxx:");
-                            persNr = input.next();
-                            persNr = Account.regID_formCheck(persNr);
-
-                        } while (persNr.equals("Error"));
-
-                        persNr = Account.regID_calculationCheck(persNr);
-                        if (persNr.equals("Error"))
-                            System.out.println("Invalid personal ID number.");
-
-                    } while (persNr.equals("Error"));
-
-
-                    int numberOfMonths = account1.costCalculation();
-
-                    account1.setPersNr(persNr);
-                    account1.setName(fName, lName);
-
-
-                    //Account account1 = new Account(fName, lName, persNr, numberOfMonths);
-
-                    System.out.println("Your account has been registered.\n");
+                    System.out.println("Your account has been registered.");
                     break;
                 }
 
-                case 2: {
-                    if (account1.getPersNr() == null) {
+                case 2: { // Log in
+                    System.out.println("To log in, please enter your personal ID number on the form yyyymmddxxxx: ");
+                    String persID = input.next();
+
+                    if (!(accounts.contains(persID))) { // if the personal ID input by user is not in the list of persNr
                         System.out.println("You must become a member before logging in!");
                         break;
                     }
                     else {
-                        System.out.println("To log in, enter your personal ID number on the form yyyymmdd-xxxx: ");
-                        String inputPersNr = input.next();
-                        String truePersNr = account1.getPersNr();
-                        account1.logIn(truePersNr, inputPersNr);
+                        loggedIn = true; //variable to grant access to case 3: "Book activity"
+                        System.out.println("You are logged in!");
                         break;
                     }
 
                 }
-                case 3: {
-                    if (account1.getPersNr() == null) { //!!!!! UPDATE
-                        System.out.println("You must become a member before logging in!");
+
+                case 3: { // Book activity
+                    if (!loggedIn) {
+                        System.out.println("Please log in before booking.");
                         break;
                     }
 
                     else {
                         System.out.println("Choose from the following classes using numbers 1-3: \n1. Spinning \n2. Aerobics \n3. Yoga ");
                         classChoice = input.nextByte();
+
+                        // control: only numbers 1, 2 and 3 are valid.
                         if (!((classChoice >= 1) && classChoice <= 3)) {
-                            System.out.println("Invalid choice");
+                            System.out.println("Invalid input.");
                             break;
                         }
                         else {
                             bookSpot(classChoice);
                         }
 
-                        //add method that selects the correct object for chosen activity.
-
-
-
-                        //System.out.println("Choose one of the spots (a1, a2 ... c2, c3): ");
-                        //String spotChoice = input.next();
-                        //add method that reserves spot for chosen activity (through an array)
-
                         break;
                     }
                 }
-                case 4: {
-                    System.exit(0);
+
+                case 4: { // Quit
+                    continueLoop = false;
                     break;
                 }
             }
         } while(continueLoop);
-    }
-
+    } // End of method getMenu
 
 
     public static void bookSpot(byte classChoice) {
 
-
+        // switch method used to reduce redundancy of code. Without it it would be necessary to write 3 times as much code.
         switch (classChoice) {
-            case 1:  kurs = upptagnaSpinning;
+            case 1:  kurs = occupiedSpinning;
                 break;
-            case 2:  kurs = upptagnaAerobics;
+            case 2:  kurs = occupiedAerobics;
                 break;
-            case 3:  kurs = upptagnaYoga;
+            case 3:  kurs = occupiedYoga;
                 break;
         }
+        boolean continueLoop = true;
 
-        String[] platser = {"1a" ,"1b", "1c", "2a", "2b", "2c", "3a", "3b", "3c"};
+        // These are the only allowed spots to choose from.
+        String[] spots = {"1a" ,"1b", "1c", "2a", "2b", "2c", "3a", "3b", "3c"};
 
         printRoom();
-        System.out.println("Ange vilken plats du vill boka (1a, 2a... 3c)");
-        Scanner input = new Scanner(System.in);
-        String valdPlats = input.next();
 
 
-        if(kurs.contains(valdPlats)){
+        do {
+            System.out.println("Choose which spot you would like to book (1a, 2a... 3c). Enter q to quit.");
+            System.out.println("The following spots are already occupied: " + kurs);
+            Scanner input = new Scanner(System.in);
+            String chosenSpot = input.next();
 
-            System.out.println("Platsen är upptagen, försök igen.");
-
-        }
-
-
-        else if(Arrays.asList(platser).contains(valdPlats)) {
-            if (classChoice == 1) {
-                upptagnaSpinning.add(valdPlats);
+            if (kurs.contains(chosenSpot)) { // checks if the chosen spot is already in the corresponding arraylist.
+                System.out.println("This spot is occupied, please try again.");
             }
-            else if (classChoice == 2) {
-                upptagnaAerobics.add(valdPlats);
+
+            //if the spot is free, add the spot to the arrayList of occupied spots, according to which class was chosen earlier.
+            else if (Arrays.asList(spots).contains(chosenSpot)) {
+                if (classChoice == 1) {
+                    occupiedSpinning.add(chosenSpot);
+                } else if (classChoice == 2) {
+                    occupiedAerobics.add(chosenSpot);
+                } else if (classChoice == 3) {
+                    occupiedYoga.add(chosenSpot);
+                }
+
+                System.out.println("You are now booked on the following spot: " + chosenSpot + ".");
+                continueLoop = false;
             }
-            else if (classChoice == 3) {
-                upptagnaYoga.add(valdPlats);
+            else if (chosenSpot.equals("q")) { // allows the user to exit loop without booking
+                continueLoop = false;
             }
-            System.out.println("Grattis du är bokad!");
-            System.out.println(upptagnaSpinning);
-
-        }
-
-        else {
-
-            System.out.println("Du har valt en ogiltigt plats, var vänlig och försök igen.");
-
-        }
+            else {
+                System.out.println("You have chosen an invalid spot, please try again.");
+            }
+        } while(continueLoop); //loop continues until a valid spot is chosen.
 
 
+    } // End of method bookSpot
 
-    }
 
+    // Prints a visual representation of the room
     public static void printRoom() {
 
         System.out.println("---------------");
@@ -210,36 +169,7 @@ public class GymWakeUp_Main {
         System.out.printf ("| 3a | 3b | 3c |\n");
         System.out.println("---------------");
 
-    }
-
-}
+    } // End of method printRoom
 
 
-
-
-
-        //ArrayList<Integer> arrli = new ArrayList<Integer>(n);
-
-        /*
-        1. Menu is presented to the user.
-        2. The user selects "book a class"
-        3. The system prints the classes to choose from (1-3)
-            - Other input is not allowed, reprompt
-        4. The user selects a class.
-        5. The system prints the spots to choose from.
-            - Other input is not allowed, reprompt
-        6. The user selects the spot.
-            - if taken, user is prompted to choose another spot.
-        */
-
-
-
-
-    // public boolean validChoice (int firstIndex, int secondIndex)
-
-
-
-
-
-
-
+} // End of class
